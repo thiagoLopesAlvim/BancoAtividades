@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-
+use App\Models\endereco;
 class ProfileController extends Controller
 {
     /**
@@ -16,9 +16,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $endereco = endereco::where("usuario_id","=", $request->user()->id)->latest()->first(); 
         return view('profile.edit', [
             'user' => $request->user(),
-        ]);
+        ],["endereco"=> $endereco]);
     }
 
     /**

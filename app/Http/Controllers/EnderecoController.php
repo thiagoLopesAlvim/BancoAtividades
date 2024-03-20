@@ -24,8 +24,9 @@ class EnderecoController extends Controller
      */
     public function update(Request $request, string $id = null)
     {
-      $entemp=  endereco::where('id','=',auth()->user()->getAuthIdentifier())->latest();
-        if($entemp == null) {
+      $entemp=  endereco::where('id','=',auth()->user()->getAuthIdentifier())->latest()->get();
+      $aux = $entemp->toArray();
+        if($entemp == null || $aux == []) {
             $aux = endereco::create([
                 'logradouro'=> $request->logradouro,
                 'numero'=> $request->numero,
@@ -34,13 +35,13 @@ class EnderecoController extends Controller
                 'complemento'=> $request->complemento,
                 'estado'=> $request->estado,
                 'usuario_id'=> auth()->user()->getAuthIdentifier(),
-            ]);
-            $aux->save();
-
+            ])->save();
+         
+            
            
         }else{
             
-            $entemp->update([
+          $entemp=  $entemp->update([
                 'logradouro'=> $request->logradouro,
                 'numero'=> $request->numero,
                 'cidade'=> $request->cidade,
@@ -49,9 +50,9 @@ class EnderecoController extends Controller
                 'estado'=> $request->estado,
                 'usuario_id'=> auth()->user()->getAuthIdentifier(),
             ]);
-            $entemp->save();
+
         }
-        return view('profile/teste');
+        return view('welcome');
     }
 
 }

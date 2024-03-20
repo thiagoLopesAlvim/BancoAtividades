@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Categoria;
+use App\Services\ProdutoService;
 use App\Models\endereco;
 use App\Models\itensPedido;
 use App\Models\pedido;
@@ -20,6 +21,10 @@ use function PHPUnit\Framework\isNull;
 
 class PedidoController extends Controller
 {
+
+    public function __construct(protected ProdutoService $service){
+
+    }
     public function adicionarCarrihno(Request $request){
         $aux = pedido::where("usuario_id","=",auth()->user()->getAuthIdentifier())->latest();
         $aux2 = $aux->get("status")->toArray();
@@ -27,7 +32,7 @@ class PedidoController extends Controller
         $valor = $aux3->pluck("valor")->toArray();
         $idproduto = $aux3->pluck("id")->toArray();
         $pedidoid = $aux->pluck("id")->toArray();
-        if( $aux2[0]["status"] == "closed"){
+        if(  $aux2 == [] || $aux2[0]["status"] == "closed"){
           $criapedido=      pedido::create([
                     "dt_pedido"=> Carbon::now()->format('d/m/Y'),
                     "status"=> 'open',
@@ -54,10 +59,16 @@ class PedidoController extends Controller
             $itenspedido->save();
         }  
 
-        $produtos = produto::join('categorias','produtos.categoria_id','=','categorias.id')
-        ->select('produtos.id', 'produtos.nome', 'produtos.valor','produtos.descricao','produtos.fotop'
-        ,'categorias.categoria as categoria_id')->get(); 
+        //$produtos = produto::join('categorias','produtos.categoria_id','=','categorias.id')
+       // ->select('produtos.id', 'produtos.nome', 'produtos.valor','produtos.descricao','produtos.fotop'
+       // ,'categorias.categoria as categoria_id')->get(); 
         //$count= pedido::where('usuario_id','=',auth()->user()->getAuthIdentifier())->count('id');
+        $search = $request->get("search");
+        $produtos = $this->service->paginateC(
+           page: $request->get("page",1),
+            perPage: $request->get("per_page",20),
+           filter: $search
+       );
 
         $count= itensPedido::join('pedidos','itens_pedidos.pedido_id','=','pedidos.id')->where(
             'pedidos.usuario_id','=',auth()->user()->getAuthIdentifier(),'and'
@@ -82,13 +93,16 @@ class PedidoController extends Controller
 
     }
 
-    public function finalizarPedido(){
+    public function finalizarPedido(Request $request){
         $sucesso = pedido::where("usuario_id","=",auth()->user()->getAuthIdentifier(),"and","status","=","open")->latest()
         ->first()->update(["status"=>"closed"]);
 
-        $produtos = produto::join('categorias','produtos.categoria_id','=','categorias.id')
-        ->select('produtos.id', 'produtos.nome', 'produtos.valor','produtos.descricao','produtos.fotop'
-        ,'categorias.categoria as categoria_id')->get(); 
+        $search = $request->get("search");
+        $produtos = $this->service->paginateC(
+           page: $request->get("page",1),
+            perPage: $request->get("per_page",20),
+           filter: $search
+       );
 
         return view("dashboard",["sucesso"=> $sucesso,"ncar"=> 0,"produtos"=> $produtos]);
     }

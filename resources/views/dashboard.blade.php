@@ -5,32 +5,28 @@
         </h2>
     <a href="{{route('resumo.pedido')}}">Itens no carrinho: {{$ncar}}</a>
     </x-slot>
-
-    @if($sucesso != null)
-    <script>
-        alert("O seu pedido foi realizado com Sucesso");
-    </script>
-    @endif
-    <div style="display:flex ;justify-content: space-between;" class="row container">
-            @foreach($produtos as $produto)
-            <div style="width: 60%; padding: 20px; border: 1px solid #ddd ; background-color:darksalmon">
+</div>
+    <div style="display:flex ;justify-content: space-between;flex-wrap:wrap;" class="row container">
+            @foreach($produtos->items() as $produto)
+            <div style="width: 30%; padding: 20px; border: 1px solid #ddd ;border-radius: 10px;
+            overflow:auto;display:flex;" class="bg-gray-200">
                     <form action="{{route('adicionar.car',$produto->id)}}" method="post" >
                     <input type="hidden" value="{{csrf_token()}}" name="_token"> 
                     <input type="hidden" name="produto_id" value="{{$produto->id}}">
                     <input type="hidden" name="valor" value="{{$produto->valor}}">
                     
-                            <img style="height: 400px; width: 300px" src="{{asset('images/'.$produto->fotop)}}">
+                            <img style="height: 200px; width: 150px" src="{{asset('images/'.$produto->fotop)}}">
                             <a class="btn-floating halfway-fab waves-effect waves-light red"></a>
                             <label> Nome do produto: </label>
                             <span style="font-weight: bold;" id="titulo">{{$produto->nome}}</span>
                             <br>
                             <label>Valor do produto:</label>
-                            <span style="font-weight: bold;" id="valor" name="valor">{{$produto->valor}}</span>
+                            <span style="font-weight: bold;" id="valor" name="valor">{{$produto->valor.'R$'}}</span>
                             <br>
                             <label>Descrição do produto:</label>
                             <p id="descricao">{{$produto->descricao}}</p>
                             <br>
-                            <button id="addCar" type="submit" style=" background-color: #007bff; 
+                            <button id="addcar" type="submit" style=" background-color: #007bff; 
                                 color: #fff; 
                                 border: none; 
                                 padding: 10px 20px;
@@ -48,6 +44,13 @@
     </div>
 
 
+    <script>
+        botao = document.getElementById('addcar');
+
+    // Adiciona um event listener para o evento de clique
+      botao.addEventListener('click', function() {
+        alert("O seu pedido foi realizado com Sucesso");});
+    </script>
 
     <style>
   .imagem {

@@ -1,3 +1,4 @@
+<x-app-layout>
 <h1 class="text-3xl font-bold bg-white-300 p-4">Novo Produto</h1>
 
 @if($errors->any())
@@ -27,7 +28,7 @@
     <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" placeholder="Descrição do Produto" name="descricaop">
     </div>
     <div class="flex items-center">
-    <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoria do produto:</label>
+    <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoria do produto: </label>
     <select id="meu-dropdown" name="categoriap">
     @foreach($categorias as $categoria)
     <option value="{{$categoria->id}}">{{$categoria->categoria}}</option>
@@ -43,16 +44,5 @@
 </form>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var dropdown = document.getElementById('meu-dropdown');
 
-        dropdown.addEventListener('change', function() {
-            var selectedOption = dropdown.options[dropdown.selectedIndex].value;
-            console.log('Opção selecionada:', selectedOption);
-
-            // Aqui você pode adicionar lógica para lidar com a opção selecionada
-            // Por exemplo, você pode enviar uma requisição AJAX para carregar dados relacionados à opção selecionada
-        });
-    });
-</script>
+</x-app-layout>

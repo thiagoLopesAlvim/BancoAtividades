@@ -1,4 +1,5 @@
-<h1 class="text-3xl font-bold bg-white-300 p-4">Nova Consulta</h1>
+<x-app-layout>
+<h1 class="text-3xl font-bold bg-white-300 p-4">Nova Categoria</h1>
 
 @if($errors->any())
     @foreach($errors->all() as $error)
@@ -20,3 +21,4 @@
     </div>
 
 </form>
+</x-app-layout>

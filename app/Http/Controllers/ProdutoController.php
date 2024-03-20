@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Services\ProdutoService;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Categoria;
 use App\Models\itensPedido;
@@ -21,6 +21,10 @@ class ProdutoController extends Controller
      * Display the user's profile form.
      */
 
+    public function __construct(protected ProdutoService $service){
+
+    }
+
      public function index(Request $request){
         $produtos = produto::join('categorias','produtos.categoria_id','=','categorias.id')
         ->select('produtos.id', 'produtos.nome', 'produtos.valor','produtos.descricao','produtos.fotop'
@@ -33,10 +37,19 @@ class ProdutoController extends Controller
     }
 
     public function dashboard(Request $request){
-        $produtos = produto::join('categorias','produtos.categoria_id','=','categorias.id')
-        ->select('produtos.id', 'produtos.nome', 'produtos.valor','produtos.descricao','produtos.fotop'
-        ,'categorias.categoria as categoria_id')->get(); 
+
+        // $produtos = produto::join('categorias','produtos.categoria_id','=','categorias.id')
+        // ->select('produtos.id', 'produtos.nome', 'produtos.valor','produtos.descricao','produtos.fotop'
+        //  ,'categorias.categoria as categoria_id')->get(); 
         
+         $search = $request->get("search");
+         $produtos = $this->service->paginateC(
+            page: $request->get("page",1),
+             perPage: $request->get("per_page",20),
+            filter: $search
+        );
+
+
         $count= itensPedido::join('pedidos','itens_pedidos.pedido_id','=','pedidos.id')->where(
             'pedidos.usuario_id','=',auth()->user()->getAuthIdentifier(),'and'
         )->where('pedidos.status','=','open')->count('itens_pedidos.id');
@@ -53,9 +66,10 @@ class ProdutoController extends Controller
     public function store(Request $request){ 
         if($request->fotop){
             $caminho = 'images/fotoprodutos';
-            $imagem = $request->file('imagem');
+            $imagem = $request->file('fotop');
             $nomeImagem = uniqid().'.'.$imagem->getClientOriginalExtension();
             $imagem->move(public_path($caminho), $nomeImagem);
+            $caminho = 'fotoprodutos/'.$nomeImagem;
              //  $request->pathImg = $path
                
             }else{

@@ -12,48 +12,44 @@
 
 </thead>
 <body>
-    <div style="display:flex ;justify-content: space-between;" class="row container">
+<div style="display:flex ;justify-content: space-between;flex-direction:column;" class="row container">
     @foreach($produtos as $produto)
-            <div style="width: 50%; padding: 20px; border: 1px solid #ddd ; background-color:darksalmon">
-                <div>
-                            <li>
-                            <img style="height: 400px; width: 300px" src="{{asset('images/'.$produto->fotop)}}">
-                            </li>
-                </div>
-                <div>
+            <div style="width: 70%; padding: 20px; border: 1px solid #ddd ; background-color:gray;border-radius: 10px;
+            overflow:auto;display:flex;justify-content: space-between;">                          
+                            <img style="height: 200px; width: 150px" src="{{asset('images/'.$produto->fotop)}}">
+               
                             <label> Nome do produto: </label>
-                            <li style="font-weight: bold;" id="titulo"> {{$produto->nome}}</li>
-                </div>
-                            <br>
-                <div>
+                            <span style="font-weight: bold;" id="titulo"> {{$produto->nome}}</span><br>
+                            
                             <label>Valor do produto:</label>
-                            <li style="font-weight: bold;" id="valor" name="valor">{{$produto->valor}}</li>
-                            <br>
-                </div>
+                            <span style="font-weight: bold;" id="valor" name="valor">{{$produto->valor}}</span><br>
                             <label>Quantidade do produto:</label>
-                            <li id="descricao">{{$produto->quantidade}}</li>
-                            <br>
+                            <span id="descricao">{{$produto->quantidade}}</span><br>
             </div>     
     @endforeach 
+</div>
 </body>
 </table>
-                <div>
-                    <h2>Valor total dos produtos: {{$total}},00</h2>
+                <div style="background-color:lightgrey; width: 70%;padding: 20px; border: 1px solid #ddd ;border-radius: 10px;">
+                    <h2 style="font-weight: bold;font-size:25px">Valor total dos produtos: {{$total}} R$</h2>
                     <br>
-                    <h2>Endreço de envio: </h2>
-                    <label>Logradouro: {{$endereco->logradouro}}</label>
+                  <div style="padding-bottom: 15px;">  
+                    <h2 style="padding-bottom: 15px;">Endreço de envio: </h2>
+                    
+                    <label style="padding-bottom: 10px;font-weight:bold;">Logradouro: {{$endereco->logradouro}}</label>
                     <br>
-                    <label>Numero: {{$endereco->numero}}</label>
+                    <label style="padding-bottom: 10px;font-weight:bold;">Numero: {{$endereco->numero}}</label>
                     <br>
-                    <label>Complemento: {{$endereco->complemento}}</label>
+                    <label style="padding-bottom: 10px;font-weight:bold;">Complemento: {{$endereco->complemento}}</label>
                     <br>
-                    <label>Estado: {{$endereco->estado}}</label>
+                    <label style="padding-bottom: 10px;font-weight:bold;">Estado: {{$endereco->estado}}</label>
+                    </div>
                 </div>
            
             <Form action="{{route('finalizar.pedido')}}" method="post">
             @method('PUT');
             <input type="hidden" value="{{csrf_token()}}" name="_token"> 
-                <button type="submit">Comprar</button>
+                <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" type="submit">Comprar</button>
             </Form>
             
 </x-app-layout>

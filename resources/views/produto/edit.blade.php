@@ -1,3 +1,4 @@
+<x-app-layout>
 <h1 class="text-3xl font-bold bg-white-300 p-4">Editar Produto</h1>
 
 @if($errors->any())
@@ -9,7 +10,7 @@
 
 <form class="grid gap-6 mb-6 md:grid-cols-2" action ="{{route('produto.update',$produto->id)}}" method="post" enctype="multipart/form-data">
 <input type="hidden" value="{{csrf_token()}}" name="_token">
- 
+
 <div class="grid gap-6 mb-6 md:grid-cols-2">
     <div class="flex items-center">
     <label for="nome" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome do produto:</label>
@@ -57,3 +58,4 @@
         });
     });
 </script>
+</x-app-layout>
